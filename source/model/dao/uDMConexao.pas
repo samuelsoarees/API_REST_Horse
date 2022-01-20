@@ -21,6 +21,7 @@ uses
   FireDAC.Phys.IBBase,
   FireDAC.Comp.Client,
   FireDAC.Comp.UI,
+  FireDac.DApt,
 
   Data.DB,
 
@@ -33,7 +34,7 @@ type
     FDConnection: TFDConnection;
     DriverLink: TFDPhysFBDriverLink;
   private
-    path : String;
+    { private declarations }
   public
     function criarQry: TFDQuery;
     procedure conectarBD();
@@ -87,7 +88,7 @@ begin
       Params.Clear;
       Params.Values['DriverID']  := 'FB';
       Params.Values['Server']    := LerIni('FirebirdConnection','Server');
-      Params.Values['Database']  := LerIni('FirebirdConnection','DatabasePath','');
+      Params.Values['Database']  := LerIni('FirebirdConnection','Database','');
       Params.Values['User_name'] := LerIni('FirebirdConnection','User_Name');
       Params.Values['Password']  := LerIni('FirebirdConnection','Password');
       Params.Values['Port']      := LerIni('FirebirdConnection', 'Port');

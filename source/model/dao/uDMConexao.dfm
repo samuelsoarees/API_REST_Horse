@@ -17,11 +17,12 @@ object DMConexao: TDMConexao
   object FDConnection: TFDConnection
     Params.Strings = (
       'Database=C:\BD\MEGASYS.FDB'
-      'DriverID=FB'
       'Password=masterkey'
       'Port=3050'
       'Server=127.0.0.1'
-      'User_Name=SYSDBA')
+      'User_Name=SYSDBA'
+      'Protocol=TCPIP'
+      'DriverID=FB')
     LoginPrompt = False
     Transaction = Transaction
     UpdateTransaction = Transaction
