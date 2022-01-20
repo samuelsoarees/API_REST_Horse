@@ -5,13 +5,20 @@ program ApiRest;
 {$R *.res}
 
 uses
-  System.SysUtils, Horse;
+  System.SysUtils,
+  Horse,
+  Horse.Jhonson,
+  uModel.Cliente in 'source\model\uModel.Cliente.pas',
+  uController.Cliente in 'source\controller\uController.Cliente.pas',
+  uCliente in 'source\model\entidades\uCliente.pas',
+  uDMConexao in 'source\model\dao\uDMConexao.pas' {DMConexao: TDataModule},
+  uFuncoesGerais in 'source\lib\uFuncoesGerais.pas';
 
 begin
-  try
-    { TODO -oUser -cConsole Main : Insert code here }
-  except
-    on E: Exception do
-      Writeln(E.ClassName, ': ', E.Message);
-  end;
+  THorse.Use(Jhonson());
+
+  uController.Cliente.Registry;
+
+  THorse.Listen(9000);
+
 end.
