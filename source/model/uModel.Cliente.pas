@@ -227,7 +227,7 @@ begin
       on e:Exception do
       begin
         Result := false;
-        raise Exception.Create('Erro ao consultar lista de clientes');
+        raise Exception.Create('Erro ao consultar deletar cliente');
       end;
     end;
 
