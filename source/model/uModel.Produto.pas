@@ -9,6 +9,7 @@ type
   TModelProduto = class
   private
     fDMConexao : TDMConexao;
+    function consultarProduto(id: Integer): Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -27,6 +28,36 @@ uses
   System.SysUtils;
 
 { TModelProduto }
+
+
+function TModelProduto.consultarProduto(id: Integer): Boolean;
+var
+  qry : TFDQuery;
+begin
+
+  try
+    qry := fDMConexao.criarQry;
+
+    with qry do
+    begin
+
+      SQL.Clear;
+      SQL.Add(' SELECT *       '+
+              ' FROM PRODUTOS  '+
+              ' WHERE ID = :ID ');
+      ParamByName('ID').AsInteger := id;
+
+      Open;
+
+      Result := not IsEmpty;
+
+    end;
+
+  finally
+    qry.Free;
+  end;
+
+end;
 
 constructor TModelProduto.Create;
 begin
@@ -55,10 +86,17 @@ begin
       with qry do
       begin
 
-        if produto.id <= 0  then
+        if (produto.id <= 0) or (produto.nome.IsEmpty) then
         begin
-          erro := 'Produto inválido.';
+          erro := 'Código inválido, ou nome não informado';
           Result := false;
+          exit;
+        end;
+
+        if not consultarProduto(produto.id) then
+        begin
+          Result := false;
+          erro := 'Produto não cadastrado na base de dados';
           exit;
         end;
 
@@ -160,6 +198,13 @@ begin
     try
 
       qry := fDMConexao.criarQry;
+
+      if not consultarProduto(produto.id) then
+      begin
+        Result := false;
+        erro := 'Produto não cadastrado na base de dados';
+        exit;
+      end;
 
       with qry do
       begin
