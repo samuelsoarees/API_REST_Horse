@@ -9,6 +9,7 @@ type
   TModelCliente = class
   private
     fDMConexao : TDMConexao;
+    function consultarCliente(id : Integer):Boolean;
   public
     constructor Create;
     destructor Destroy; override;
@@ -139,6 +140,35 @@ begin
 end;
 
 
+function TModelCliente.consultarCliente(id: Integer): Boolean;
+var
+  qry : TFDQuery;
+begin
+
+  try
+    qry := fDMConexao.criarQry;
+
+    with qry do
+    begin
+
+      SQL.Clear;
+      SQL.Add(' SELECT *       '+
+              ' FROM CLIENTES  '+
+              ' WHERE ID = :ID ');
+      ParamByName('ID').AsInteger := id;
+
+      Open;
+
+      Result := not IsEmpty;
+
+    end;
+
+  finally
+    qry.Free;
+  end;
+
+end;
+
 function TModelCliente.atualizarCliente(cliente: TCliente;
   out erro: String): Boolean;
 var
@@ -154,10 +184,17 @@ begin
       with qry do
       begin
 
-        if cliente.id <= 0  then
+        if (cliente.id <= 0) or (cliente.nome.IsEmpty) then
         begin
-          erro := 'Cliente inválido.';
+          erro := 'Código inválido ou nome não informado.';
           Result := false;
+          exit;
+        end;
+
+        if not consultarCliente(cliente.id) then
+        begin
+          Result := false;
+          erro := 'Cliente não cadastrado na base';
           exit;
         end;
 
@@ -184,7 +221,7 @@ begin
 
     except
       on e:Exception do
-        raise Exception.Create('Erro ao atualiza cliente: ' + e.Message);
+        raise Exception.Create('Erro ao atualizar cliente: ' + e.Message);
     end;
 
   finally
@@ -202,6 +239,13 @@ begin
   try
 
     try
+
+      if not consultarCliente(cliente.id) then
+      begin
+        Result := false;
+        erro := 'Cliente não cadastrado na base';
+        exit;
+      end;
 
       qry := fDMConexao.criarQry;
 
