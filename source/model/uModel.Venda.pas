@@ -177,9 +177,9 @@ begin
                 '    ID_CLIENTE = :ID_CLIENTE      '+
                 ' WHERE (ID = :ID) ');
 
-        ParamByName('ID').AsInteger          := venda.id;
-        ParamByName('DATA_VENDA').AsDate     := venda.dataVenda;
-        ParamByName('ID_CLIENTE').AsCurrency := venda.cliente.id;
+        ParamByName('ID').AsInteger         := venda.id;
+        ParamByName('DATA_VENDA').AsDate    := venda.dataVenda;
+        ParamByName('ID_CLIENTE').AsInteger := venda.cliente.id;
 
         ExecSQL;
 
@@ -376,6 +376,23 @@ begin
 
       with qry do
       begin
+
+        SQL.Clear;
+
+        SQL.Add(' SELECT *       '+
+                ' FROM VENDAS    '+
+                ' WHERE ID = :ID ');
+
+        ParamByName('ID').AsInteger := venda.id;
+
+        Open;
+
+        if IsEmpty then
+        begin
+          erro := 'Venda não existente na base de dados';
+          Result := false;
+          exit;
+        end;
 
         SQL.Clear;
 
