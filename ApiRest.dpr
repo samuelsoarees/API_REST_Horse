@@ -31,7 +31,7 @@ begin
   THorse.Use(HorseBasicAuthentication(
   function(const AUsername, APassword: string): Boolean
   begin
-    Result := AUsername.Equals('testserver') and APassword.Equals('testserver');
+    Result := AUsername.Equals('testserver') and APassword.Equals('22012022');
   end));
 
   uController.Cliente.Registry;
